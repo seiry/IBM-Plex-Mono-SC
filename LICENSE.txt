@@ -1,3 +1,11 @@
+Copyright © 2017 IBM Corp. with Reserved Font Name "Plex"
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+
+This license is copied below, and is also available with a FAQ at: http://scripts.sil.org/OFL
+
+-----------------------------------------------------------
+
 Licensing Summary
 
 This repository builds and publishes font binaries derived from IBM Plex Mono and IBM Plex Sans SC.
