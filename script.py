@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 import fontforge
 import psMat
 
@@ -82,6 +83,9 @@ def main():
     
     # 8. 生成文件
     print(f"Generating {OUTPUT_PATH}...")
+    out_dir = os.path.dirname(OUTPUT_PATH)
+    if out_dir:
+        os.makedirs(out_dir, exist_ok=True)
     mono.generate(OUTPUT_PATH)
     print("Done!")
 

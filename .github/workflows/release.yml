@@ -37,14 +37,20 @@ jobs:
           fontforge -version
           fontforge -script script.py
 
+      - name: Show outputs
+        run: |
+          set -euo pipefail
+          ls -la out || true
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: PlexMono-SC-Merged
-          path: PlexMono-SC-Merged.ttf
+          name: out
+          path: out/
 
       - name: Publish GitHub Release asset
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: PlexMono-SC-Merged.ttf
+          files: |
+            out/**
