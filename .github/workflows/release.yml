@@ -1,0 +1,50 @@
+name: Release
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            fontforge \
+            python3-fontforge
+
+      - name: Download and prepare source fonts
+        run: |
+          set -euo pipefail
+
+          python3 .github/scripts/fetch_plex_fonts.py
+
+      - name: Run FontForge merge script
+        run: |
+          set -euo pipefail
+          fontforge -version
+          fontforge -script script.py
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PlexMono-SC-Merged
+          path: PlexMono-SC-Merged.ttf
+
+      - name: Publish GitHub Release asset
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: PlexMono-SC-Merged.ttf
