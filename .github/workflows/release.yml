@@ -22,8 +22,14 @@ jobs:
           set -euo pipefail
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
+            curl \
             fontforge \
-            python3-fontforge
+            python3-fontforge \
+            python3-pip \
+            unzip
+
+          python3 -m pip install --upgrade pip
+          python3 -m pip install --upgrade fonttools
 
       - name: Download and prepare source fonts
         run: |
@@ -41,6 +47,40 @@ jobs:
         run: |
           set -euo pipefail
           ls -la out || true
+
+      - name: Patch with Nerd Fonts (font-patcher)
+        run: |
+          set -euo pipefail
+
+          # Use the official FontPatcher release zip (no repo clone)
+          # https://github.com/ryanoasis/nerd-fonts/releases/latest/download/FontPatcher.zip
+          rm -rf _fontpatcher FontPatcher.zip
+          mkdir -p _fontpatcher
+          curl -fsSL -o FontPatcher.zip \
+            https://github.com/ryanoasis/nerd-fonts/releases/latest/download/FontPatcher.zip
+          unzip -q FontPatcher.zip -d _fontpatcher
+
+          PATCHER_PATH=$(find _fontpatcher -type f \( -name 'font-patcher' -o -name 'font-patcher.py' \) | head -n 1)
+          test -n "$PATCHER_PATH"
+
+          test -f out/PlexMono-SC.ttf
+
+          BEFORE_TTFS=$(ls -1 out/*.ttf 2>/dev/null | sort || true)
+
+          python3 "$PATCHER_PATH" \
+            out/PlexMono-SC.ttf \
+            --complete \
+            --mono \
+            --careful \
+            --outputdir out
+
+          AFTER_TTFS=$(ls -1 out/*.ttf 2>/dev/null | sort)
+          NEW_TTF=$(comm -13 <(echo "$BEFORE_TTFS") <(echo "$AFTER_TTFS") | head -n 1)
+          test -n "$NEW_TTF"
+          mv -f "$NEW_TTF" out/PlexMono-SC-NerdFont.ttf
+
+          echo "Patched outputs:" \
+          && ls -la out || true
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
