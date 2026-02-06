@@ -8,7 +8,7 @@ MONO_PATH = "IBMPlexMono-Regular.ttf"
 # 副字体（中文），用于补充汉字
 SC_PATH = "IBMPlexSansSC-Regular.ttf"
 # 输出文件名
-OUTPUT_PATH = "PlexMono-SC-Merged.ttf"
+OUTPUT_PATH = "out/PlexMono-SC.ttf"
 
 # 中文缩放比例
 # 0.9 是一個经验值，防止中文太大撑开行高或显得突兀
