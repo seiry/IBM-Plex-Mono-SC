@@ -2,7 +2,7 @@
 import os
 import fontforge
 import psMat
-
+import datetime
 # ================= 配置区 =================
 # 主字体（英文/代码），决定行高和基准宽度
 MONO_PATH = "IBMPlexMono-Regular.ttf"
@@ -80,7 +80,9 @@ def main():
     mono.fontname = "PlexMonoSC-Regular"
     mono.fullname = "Plex Mono SC Regular"
     mono.familyname = "Plex Mono SC"
-    
+    today_str = datetime.datetime.now().strftime("%Y.%m.%d")
+    mono.version = "Version " + today_str
+
     # 8. 生成文件
     print(f"Generating {OUTPUT_PATH}...")
     out_dir = os.path.dirname(OUTPUT_PATH)
